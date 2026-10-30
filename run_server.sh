@@ -31,3 +31,4 @@ echo " URL: http://$MCP_HOST:$MCP_PORT/mcp"
 echo "============================================================"
 
 exec python3 "$DIR/mcp_coding_agent.py"
+

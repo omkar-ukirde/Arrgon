@@ -3,6 +3,7 @@ import re
 import shlex
 import shutil
 import subprocess
+import sys
 import tempfile
 from pathlib import Path
 from typing import Optional
@@ -11,8 +12,18 @@ from mcp.server.fastmcp import FastMCP
 # =====================================================================
 # 1. CONFIGURATION
 # =====================================================================
+# Workspace can be set via:
+#   1. CLI argument:  python3 mcp_coding_agent.py /path/to/project
+#   2. Environment:   MCP_WORKSPACE_DIR=/path/to/project
+#   3. Default:       ./my_coding_workspace
+_cli_workspace = None
+for arg in sys.argv[1:]:
+    if not arg.startswith("-"):
+        _cli_workspace = arg
+        break
+
 WORKSPACE_DIR = Path(
-    os.environ.get("MCP_WORKSPACE_DIR", "./my_coding_workspace")
+    _cli_workspace or os.environ.get("MCP_WORKSPACE_DIR", "./my_coding_workspace")
 ).resolve()
 WORKSPACE_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -477,13 +488,29 @@ def run_command(
 
 
 # =====================================================================
-# 5. ENTRYPOINT (Localhost 127.0.0.1 Streamable HTTP)
+# 5. ENTRYPOINT — supports both stdio (Local MCP) and HTTP (Cloud MCP)
+# =====================================================================
+#   stdio mode (default):  python3 mcp_coding_agent.py [/path/to/workspace]
+#   HTTP  mode:            python3 mcp_coding_agent.py --http [/path/to/workspace]
 # =====================================================================
 if __name__ == "__main__":
-    WORKSPACE_DIR.mkdir(parents=True, exist_ok=True)
-    print(f"============================================================")
-    print(f" Local Coding Agent MCP Server")
-    print(f" Workspace : {WORKSPACE_DIR}")
-    print(f" Endpoint  : http://{HOST}:{PORT}/mcp")
-    print(f"============================================================")
-    mcp.run(transport="streamable-http")
+    use_http = "--http" in sys.argv
+
+    if use_http:
+        import sys as _sys
+        _sys.stderr.write(
+            f"============================================================\n"
+            f" Local Coding Agent MCP Server  (Streamable HTTP)\n"
+            f" Workspace : {WORKSPACE_DIR}\n"
+            f" Endpoint  : http://{HOST}:{PORT}/mcp\n"
+            f"============================================================\n"
+        )
+        mcp.run(transport="streamable-http")
+    else:
+        # stdio mode — Gemini Desktop App launches and manages the process
+        import sys as _sys
+        _sys.stderr.write(
+            f"Local Coding Agent MCP (stdio) | Workspace: {WORKSPACE_DIR}\n"
+        )
+        mcp.run(transport="stdio")
+

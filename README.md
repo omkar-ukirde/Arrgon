@@ -114,3 +114,4 @@ Run the test suite verifying all tools, security rules, and HTTP endpoints:
 source .venv/bin/activate
 pytest -v
 ```
+

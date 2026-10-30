@@ -72,19 +72,23 @@ The Gemini app launches and manages the server process for you. Zero maintenance
 | **Command** | See below 👇 |
 | **Sandbox** | **Full access** |
 
-**Command** — paste this, replacing `/path/to/your/project` with the folder you want Gemini to work on:
+**Command** — paste the full path to `start_mcp.sh`:
 
 ```
-/full/path/to/Arrgon/.venv/bin/python3 /full/path/to/Arrgon/mcp_coding_agent.py /path/to/your/project
+/full/path/to/Arrgon/start_mcp.sh
 ```
 
-**Example** (if you cloned Arrgon into your home directory and want to code on a Flutter app):
+**Example** (on macOS):
 
 ```
-/Users/yourname/Arrgon/.venv/bin/python3 /Users/yourname/Arrgon/mcp_coding_agent.py /Users/yourname/MyFlutterApp
+/Users/yourname/Arrgon/start_mcp.sh
 ```
 
-> **⚠️ Use full absolute paths!** The Gemini app launches the process from its own working directory, so relative paths won't resolve correctly. Using the venv's `python3` binary ensures all dependencies are found.
+> **💡 Changing your project folder:**
+> - Edit `DEFAULT_WORKSPACE` inside `start_mcp.sh` to point to whatever project directory you want to work on (e.g., `/Users/yourname/MyProject`), or
+> - Pass the directory directly as an argument in the Command field:
+>   `/Users/yourname/Arrgon/start_mcp.sh /Users/yourname/MyProject`
+> - Always choose **Full access** under Sandbox settings so Arrgon can read and write to your workspace without permission errors.
 
 Click **Next** → **Connect**, and you're done!
 

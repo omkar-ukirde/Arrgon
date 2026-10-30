@@ -1,0 +1,5 @@
+# MCP Coding Agent Server Dependencies
+# FastMCP streamable-http requires mcp 1.x (e.g. 1.30.0)
+mcp>=1.30.0,<2
+pytest>=8.0.0
+httpx>=0.28.0

@@ -1,0 +1,7 @@
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+my_coding_workspace/
+*.tmp

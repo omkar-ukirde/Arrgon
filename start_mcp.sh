@@ -4,16 +4,24 @@
 # ==============================================================================
 #
 # Paste this file's full path into Gemini Desktop App's "Command" field:
-#   /Users/omkar/GeminiAppMCP/start_mcp.sh
+#   /path/to/Arrgon/start_mcp.sh
 #
-# To point Arrgon to a specific project folder:
-# 1. Edit DEFAULT_WORKSPACE below, OR
-# 2. Pass it as an argument: /Users/omkar/GeminiAppMCP/start_mcp.sh /path/to/project
+# To point Arrgon to your project folder:
+# 1. Pass as an argument:  /path/to/Arrgon/start_mcp.sh /path/to/project
+# 2. Or create a .workspace file with your project path in this directory
+# 3. Or set the MCP_WORKSPACE_DIR environment variable
+# 4. Fallback defaults to: ~/my_coding_workspace
 # ==============================================================================
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-DEFAULT_WORKSPACE="/Users/omkar/GeminiAppMCP"
+LOCAL_WS_FILE="$DIR/.workspace"
+SAVED_WS=""
+if [ -f "$LOCAL_WS_FILE" ]; then
+    SAVED_WS="$(cat "$LOCAL_WS_FILE" | tr -d '\r\n')"
+fi
+
+DEFAULT_WORKSPACE="${SAVED_WS:-${DEFAULT_WORKSPACE:-$HOME/my_coding_workspace}}"
 TARGET_WORKSPACE="${1:-${MCP_WORKSPACE_DIR:-$DEFAULT_WORKSPACE}}"
 
 # Optional logging for troubleshooting (kept in /tmp/arrgon.log)
